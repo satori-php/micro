@@ -16,22 +16,22 @@ namespace Satori\Micro;
 class Application implements \ArrayAccess
 {
     /**
-     * @var callable[] Contains services.
+     * @var array<string, callable> Contains services.
      */
     private $services = [];
 
     /**
-     * @var mixed[] Contains parameters.
+     * @var array<string, mixed> Contains parameters.
      */
     private $parameters = [];
 
     /**
-     * @var string[] Contains subscription keys.
+     * @var array<string, array<int, string>> Contains subscription keys.
      */
     private $events = [];
 
     /**
-     * @var callable[] Contains subscriptions.
+     * @var array<string, callable> Contains subscriptions.
      */
     private $subscriptions = [];
 
