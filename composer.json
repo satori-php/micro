@@ -1,7 +1,7 @@
 {
     "name": "satori/micro",
     "description": "Microframework application",
-    "keywords": ["Micro", "framework"],
+    "keywords": ["Satori", "micro", "framework", "microframework", "di", "container", "event", "dispatcher"],
     "license": "MIT",
     "authors": [
         {
