@@ -10,10 +10,12 @@ declare(strict_types=1);
 
 namespace Satori\Micro;
 
+use Satori\Application\ApplicationInterface;
+
 /**
  * Application class for the microframework.
  */
-class Application implements \ArrayAccess
+class Application implements ApplicationInterface
 {
     /**
      * @var array<string, callable> Contains services.
