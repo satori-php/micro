@@ -13,7 +13,7 @@ namespace Satori\Micro;
 use Satori\Application\ApplicationInterface;
 
 /**
- * Application class for the microframework.
+ * Application class for the Satori microframework.
  */
 class Application implements ApplicationInterface
 {
@@ -98,7 +98,7 @@ class Application implements ApplicationInterface
      */
     public function offsetExists($key)
     {
-        return isset($this->parameters[$key]);
+        return array_key_exists($key, $this->parameters);
     }
 
     /**
@@ -112,7 +112,7 @@ class Application implements ApplicationInterface
      */
     public function offsetGet($key)
     {
-        if (isset($this->parameters[$key])) {
+        if (array_key_exists($key, $this->parameters)) {
 
             return $this->parameters[$key];
         }
