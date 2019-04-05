@@ -145,26 +145,26 @@ class Application implements ApplicationInterface
      *
      * @param string   $event    The unique name of the event.
      * @param string   $listener The unique name of the listener.
-     * @param callable $action   The closure or invokable object.
+     * @param callable $callback The closure or invokable object.
      */
-    public function subscribe(string $event, string $listener, callable $action)
+    public function subscribe(string $event, string $listener, callable $callback)
     {
-        $actionKey = $event . ' ' . $listener;
-        $this->events[$event][] = $actionKey;
-        $this->subscriptions[$actionKey] = $action;
+        $callbackKey = $event . ' ' . $listener;
+        $this->events[$event][] = $callbackKey;
+        $this->subscriptions[$callbackKey] = $callback;
     }
 
     /**
      * Notifies listeners about an event.
      *
      * @param string $event     The unique name of the event.
-     * @param array  $arguments Arguments for event actions.
+     * @param array  $arguments Arguments for event callbacks.
      */
     public function notify(string $event, array $arguments = null)
     {
         if (isset($this->events[$event])) {
-            foreach ($this->events[$event] as $priorityKey => $actionKey) {
-                $output = $this->subscriptions[$actionKey]($this, $arguments ?? []);
+            foreach ($this->events[$event] as $priorityKey => $callbackKey) {
+                $output = $this->subscriptions[$callbackKey]($this, $arguments ?? []);
                 if (isset($output['stop']) && true === $output['stop']) {
                     break;
                 }
