@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "satori/application": "dev-master"
+        "satori/application": "^0.1.1"
     },
     "autoload": {
         "psr-4": {
