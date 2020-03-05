@@ -10,30 +10,40 @@ declare(strict_types=1);
 
 namespace Satori\Micro;
 
-use Satori\Application\ApplicationInterface;
+use Satori\Application\KernelInterface;
 
 /**
- * Application class for the Satori microframework.
+ * Microframework kernel.
+ * Includes dependency injection container and event dispatcher.
  */
-class Application implements ApplicationInterface
+class Kernel implements KernelInterface
 {
     /**
-     * @var array<string, callable> Contains services.
+     * @var callable[] Contains services.
+     *                 $this->services as callable[string] and
+     *                 $this->services[$id] as callable.
      */
     private $services = [];
 
     /**
-     * @var array<string, mixed> Contains parameters.
+     * @var mixed[] Contains parameters.
+     *              $this->parameters as mixed[string] and
+     *              $this->parameters[$key] as mixed.
      */
     private $parameters = [];
 
     /**
-     * @var array<string, array<int, string>> Contains subscription keys.
+     * @var array[] Contains subscription keys.
+     *              $this->events as array[string] and
+     *              $this->events[$event] as string[int] and
+     *              $this->events[$event][$i] as string.
      */
     private $events = [];
 
     /**
-     * @var array<string, callable> Contains subscriptions.
+     * @var callable[] Contains subscriptions.
+     *                 $this->subscriptions as callable[string] and
+     *                 $this->subscriptions[$callbackKey] as callable.
      */
     private $subscriptions = [];
 
@@ -46,7 +56,7 @@ class Application implements ApplicationInterface
      *
      * @return object The service (object) instance.
      */
-    public function __get(string $id)
+    public function __get(string $id): object
     {
         if (isset($this->services[$id])) {
 
@@ -60,8 +70,10 @@ class Application implements ApplicationInterface
      *
      * @param string   $id         The unique name of the service (object).
      * @param callable $definition The closure or invokable object.
+     *
+     * @return void
      */
-    public function __set(string $id, callable $definition)
+    public function __set(string $id, callable $definition): void
     {
         if (ltrim($id, '_') !== $id) {
             $this->services[$id] = $definition;
@@ -124,6 +136,8 @@ class Application implements ApplicationInterface
      *
      * @param string $key   The unique key of the parameter.
      * @param mixed  $value The value of the parameter.
+     *
+     * @return void
      */
     public function offsetSet($key, $value)
     {
@@ -134,6 +148,8 @@ class Application implements ApplicationInterface
      * Removes a parameter.
      *
      * @param string $key The unique key of the parameter.
+     *
+     * @return void
      */
     public function offsetUnset($key)
     {
@@ -146,8 +162,10 @@ class Application implements ApplicationInterface
      * @param string   $event    The unique name of the event.
      * @param string   $listener The unique name of the listener.
      * @param callable $callback The closure or invokable object.
+     *
+     * @return void
      */
-    public function subscribe(string $event, string $listener, callable $callback)
+    public function subscribe(string $event, string $listener, callable $callback): void
     {
         $callbackKey = $event . ' ' . $listener;
         $this->events[$event][] = $callbackKey;
@@ -159,8 +177,10 @@ class Application implements ApplicationInterface
      *
      * @param string $event     The unique name of the event.
      * @param array  $arguments Arguments for event callbacks.
+     *
+     * @return void
      */
-    public function notify(string $event, array $arguments = null)
+    public function notify(string $event, array $arguments = null): void
     {
         if (isset($this->events[$event])) {
             foreach ($this->events[$event] as $priorityKey => $callbackKey) {
@@ -177,9 +197,9 @@ class Application implements ApplicationInterface
      *
      * @param string $id The unique name of the application engine.
      *
-     * @return mixed
+     * @return object
      */
-    public function run(string $id)
+    public function run(string $id): object
     {
         return $this->__get($id);
     }
