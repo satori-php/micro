@@ -1,6 +1,6 @@
-# Micro framework core.
+# Micro framework kernel.
 
-Requires PHP 7
+Requires PHP 7.2
 
 ## Usage
 
@@ -9,14 +9,14 @@ Step 1: Declare dependencies.
 ```php
 declare(strict_types=1);
 
-use Satori\Micro\Application;
+use Satori\Micro\Kernel;
 
-$app = new Application();
+$app = new Kernel();
 
 /**
  * Declares an action that has dependencies.
  */
-$app->pageIndexAction = function (Application $app) {
+$app->pageIndexAction = function (Kernel $app) {
     return new \Page\IndexAction(
         $app->pageIndexTemplate,
         $app->pageIndexService
@@ -26,14 +26,14 @@ $app->pageIndexAction = function (Application $app) {
 /**
  * Declares a template that depends on a configuration parameter.
  */
-$app->pageIndexTemplate = function (Application $app) {
+$app->pageIndexTemplate = function (Kernel $app) {
     return new \Page\IndexTemplate($app['path.template']);
 };
 
 /**
  * Declares an service.
  */
-$app->pageIndexService = function (Application $app) {
+$app->pageIndexService = function (Kernel $app) {
     return new \Page\IndexService($app['fake.data']);
 };
 
@@ -55,15 +55,15 @@ Step 1: Subscribe a listener.
 ```php
 declare(strict_types=1);
 
-use Satori\Micro\Application;
+use Satori\Micro\Kernel;
 use App\Logger;
 
-$app = new Application();
+$app = new Kernel();
 
 /**
  * Declares a logger.
  */
-$app->logger = function (Application $app) {
+$app->logger = function (Kernel $app) {
     return new \App\Logger();
 };
 
@@ -77,7 +77,7 @@ $app->logger = function (Application $app) {
 $app->subscribe(
     'system_error', // $event
     'logger',       // $listener
-    function (Application $app, array $arguments = null) {
+    function (Kernel $app, array $arguments = null) {
         $logger = $app->logger;
         $logger->log('error', 'System error', $arguments);
     }
